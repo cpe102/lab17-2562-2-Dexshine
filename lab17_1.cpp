@@ -16,22 +16,25 @@ string upper(string x){
     }
     return x;
 }
+void prtline(int n){
+    for(int j=0;j<n;j++){ cout << "-";}
+    cout << "\n";
+}
 
 int main()
 {
     ifstream namescore("name_score.txt");
     string data,grade;
     int num1,num2,num3;
-    int tscore;
     bool check = 1;
     char name[50];
     vector<string> vname;
     vector<int> vscore;
-    vector<string> vgrade = {};
+    vector<string> vgrade;
     while(getline(namescore,data)){
         sscanf(data.c_str(),"%[^:] : %d %d %d",name,&num1,&num2,&num3);
         vname.push_back(name);
-        tscore = num1+num2+num3;
+        int tscore = num1+num2+num3;
         vscore.push_back(tscore);
         if(tscore>=80) grade = "A";
         else if(tscore>=70) grade = "B";
@@ -47,28 +50,36 @@ int main()
         getline(cin,text);
         string ntext = upper(text);
         int idx = text.find_first_of(" ");
-
+        bool found = 0; 
         command = ntext.substr(0,idx);
         search = ntext.substr(idx+1,ntext.size());
         if(command == "NAME"){
-            for(int i=0;i<=vname.size();i++){
+            prtline(33);
+            for(int i=0;i<vname.size();i++){
                 if(upper(vname[i])==search){
-                    cout << vname[i] << "\'s grade = " << vgrade[i];
+                    cout << vname[i] << "\'s grade = " << vgrade[i] << "\n";
+                    found = 1;
                 }
-                else if(i == vname.size() and vname[i]!= search){
-                    cout << "Cannot found" << "\n";
+                else if(found == 0  and i==vname.size()-1){
+                    cout << "Cannot found." << "\n";
                 }
             }
+            prtline(33);
         }
+        found = 0;
         if(command == "GRADE"){
-            for(int i=0;i<=vgrade.size();i++){
+            prtline(33);
+            for(int i=0;i<vgrade.size();i++){
                 if(upper(vgrade[i])==search){
                     cout << vname[i] << "\n";
+                    found = 1;
                 }
-                else if(i == vgrade.size() and vgrade[i] != search){
-                    cout << "Cannot found" << "\n";
+                else if(found == 0  and i==vgrade.size()-1){
+                    cout << "Cannot found." << "\n";
                 }
+                
             }
+            prtline(33);
         }
         if(command == "EXIT"){
             check = 0;;
