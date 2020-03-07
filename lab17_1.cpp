@@ -3,13 +3,16 @@
 #include<fstream>
 #include<string>
 #include<ctype.h>
+#include<cstring>
 #include<stdio.h>
 using namespace std;
 string upper(string x){
+    string temp;
     int i=0;
-    while(x[i]){
-        x[i] = toupper(x[i]);
-        i++;
+    for(i=0;i<x.size();i++){
+        if(x[i]>96){
+            x[i] -= 32;
+        }
     }
     return x;
 }
@@ -17,63 +20,63 @@ string upper(string x){
 int main()
 {
     ifstream namescore("name_score.txt");
-    string data;
+    string data,grade;
     int num1,num2,num3;
+    int tscore;
+    bool check = 1;
     char name[50];
     vector<string> vname;
     vector<int> vscore;
-    vector<string> vgrade;
+    vector<string> vgrade = {};
     while(getline(namescore,data)){
         sscanf(data.c_str(),"%[^:] : %d %d %d",name,&num1,&num2,&num3);
         vname.push_back(name);
-        int tscore = num1+num2+num3;
+        tscore = num1+num2+num3;
         vscore.push_back(tscore);
-        string grade;
-        if(tscore>=80) grade = 'A';
-        else if(tscore>=70) grade = 'B';
-        else if(tscore>=60) grade = 'C';
-        else if(tscore>=50) grade = 'D';
-        else grade = 'F';
+        if(tscore>=80) grade = "A";
+        else if(tscore>=70) grade = "B";
+        else if(tscore>=60) grade = "C";
+        else if(tscore>=50) grade = "D";
+        else grade = "F";
         vgrade.push_back(grade);
     }
-    while(true){
+    while(check){
         string text;
-        int end = text.find_first_of(" ");
-        string command1,search1;
-        cout << "Please input your command: ";
+        string command,search;
+        cout << "Please input your command:";
         getline(cin,text);
+        string ntext = upper(text);
+        int idx = text.find_first_of(" ");
 
-        text = upper(text);
-
-        command1 = text.substr(0,end);
-        search1 = text.substr(end+1,text.size());
-        if(command1 == "NAME"){
+        command = ntext.substr(0,idx);
+        search = ntext.substr(idx+1,ntext.size());
+        if(command == "NAME"){
             for(int i=0;i<=vname.size();i++){
-                if(upper(vname[i])==search1){
-                    cout << vname[i] << " \'s grade = " << vgrade[i];
+                if(upper(vname[i])==search){
+                    cout << vname[i] << "\'s grade = " << vgrade[i];
                 }
-                else if(i == vname.size() and vname[i]!= search1){
+                else if(i == vname.size() and vname[i]!= search){
                     cout << "Cannot found" << "\n";
                 }
             }
         }
-        if(command1 == "GRADE"){
+        if(command == "GRADE"){
             for(int i=0;i<=vgrade.size();i++){
-                if(upper(vgrade[i])==search1){
+                if(upper(vgrade[i])==search){
                     cout << vname[i] << "\n";
                 }
-                else if(i == vgrade.size() and vgrade[i] != search1){
+                else if(i == vgrade.size() and vgrade[i] != search){
                     cout << "Cannot found" << "\n";
                 }
             }
         }
-        if(command1 == "EXIT"){
-            break;
+        if(command == "EXIT"){
+            check = 0;;
         }
-        if(command1 != "NAME" and command1 != "GRADE" and command1 != "EXIT"){
+        if(command != "NAME" and command != "GRADE" and command != "EXIT"){
             cout << "Invalid command" << "\n";
         }
     }
-
+    
 
 }
